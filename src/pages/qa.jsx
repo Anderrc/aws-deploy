@@ -19,14 +19,14 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 // markup
-const IndexPage = () => {
+const Qa = () => {
 	return (
 		<App>
 			<GlobalStyle />
-			<title>Home Page</title>
-			<Main environment=""></Main>
+			<title>Develop</title>
+			<Main environment="qa"></Main>
 		</App>
 	);
 };
 
-export default IndexPage;
+export default Qa;
