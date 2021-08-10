@@ -13,7 +13,7 @@ const Log = async (idDeploy, pipeline, ip) => {
 
 	await axios
 		.get(
-			`https://microfront-2.s3.amazonaws.com/logs/log-${day}-${month}-${year}.json`
+			`${process.env.LOCATION_LOGS}log-${day}-${month}-${year}.json`
 		)
 		.then((res) => {
 			logs = res.data;
@@ -44,7 +44,7 @@ const Log = async (idDeploy, pipeline, ip) => {
 	let params = JSON.stringify(logs)
 	await axios
 		.post(
-			`https://m6kt0qrlxk.execute-api.us-east-1.amazonaws.com/test/logs`,
+			`${process.env.SAVE_LOGS}`,
 			params, {
 
 			"headers": {
