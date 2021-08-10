@@ -13,6 +13,8 @@ import axios from "axios";
 import PipelineContext, { AppContext } from "../../../context/pipelines";
 
 const Main = ({ environment }) => {
+
+
 	return (
 		<PipelineContext>
 			<Header></Header>
@@ -53,41 +55,31 @@ export const ButtonsDeploys = ({ environment }) => {
 
 	const CallPipelines = async () => {
 		setProgress(progress + 10);
-		await axios
-			.get(
-				"https://m6kt0qrlxk.execute-api.us-east-1.amazonaws.com/test/",
-				{
-					method: "GET",
-				}
-			)
-			.then((res) => {
-				res.data.pipelines.map((item) => {
-					setPipelines();
-					let pip = {
-						name: item.name,
-						state: "",
-					};
-					pipelines.push(pip);
-					setPipelines(pipelines);
-					return null;
-				});
-
-				let pipelinesEnvAux = res.data.pipelines.filter(
-					(pipeline) => pipeline.name.indexOf(environment) === 0
-				);
-				setPipelinesEnv(pipelinesEnvAux);
-				console.log(pipelinesEnvAux);
-				setProgress(progress + 20);
+		await axios.get(`${process.env.LIST_PIPELINES}`).then((res) => {
+			res.data.pipelines.map((item) => {
+				let pip = {
+					name: item.name,
+					state: "",
+				};
+				pipelines.push(pip);
+				setPipelines(pipelines);
+				return null;
 			});
+
+			let pipelinesEnvAux = res.data.pipelines.filter(
+				(pipeline) => pipeline.name.indexOf(environment) === 0
+			);
+			setPipelinesEnv(pipelinesEnvAux);
+			console.log(pipelinesEnvAux);
+			setProgress(progress + 20);
+		});
 		setProgress(100);
 	};
 
 	const setStatusPipeline = async (text, key) => {
 		setProgress(progress + 10);
 		await axios
-			.post(
-				`https://m6kt0qrlxk.execute-api.us-east-1.amazonaws.com/test/pipelineexecution?pipeline=${text}`
-			)
+			.post(`${process.env.LIST_EXECUTIONS}?pipeline=${text}`)
 			.then((res) => {
 				pipelines[key].state =
 					res.data.pipelineExecutionSummaries[0].status;
@@ -107,7 +99,7 @@ export const ButtonsDeploys = ({ environment }) => {
 	}, [reload]);
 	return (
 		<div>
-			<BtnReload/>
+			<BtnReload />
 			{pipelinesEnv.map((item, key) => (
 				<ButtonDeploy key={key} clave={key} text={item.name} />
 			))}

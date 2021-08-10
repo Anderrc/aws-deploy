@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import axios from "axios";
 import { ButtonStyled } from "./styledComponent";
 import { AppContext } from "../../../context/pipelines";
+import Log from "../Log";
 const ButtonDeploy = ({ text, clave }) => {
 	const {
 		reload,
@@ -15,12 +16,17 @@ const ButtonDeploy = ({ text, clave }) => {
 	const handleClick = async () => {
 		setProgress(progress + 10);
 		await axios
-			.post(
-				`https://m6kt0qrlxk.execute-api.us-east-1.amazonaws.com/test?pipeline=${text}`
-			)
-			.then((res) => {
+			.post(`${process.env.DEPLOY}?pipeline=${text}`)
+			.then(async(res) => {
 				pipelines[clave].state = "InProgress";
 				setPipelines(pipelines);
+				console.log(res.data);
+				let ip = null;
+				await axios
+					.get("https://api.ipify.org")
+					.then((res) => (ip = res.data));
+				Log(res.data.pipelineExecutionId, text, ip);
+
 				setTimeout(() => {
 					setReload(!reload);
 					setProgress(progress + 10);
