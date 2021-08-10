@@ -27,6 +27,7 @@
     LIST_PIPELINES=<endpoint_to_lambda_list_pipelines>
     LIST_EXECUTIONS=<endpoint_to_lambda_list_executions_to pipelines>
     LOCATION_LOGS=<endpoint_folder_location_logs>
+    SAVE_LOGS=<endpoint_register_logs>
     ```
 
 3.  **Start developing.**
